@@ -1,32 +1,32 @@
 {
-  "name": "@playwright/mcp",
+  "name": "patchright-mcp",
   "version": "0.0.55",
-  "description": "Playwright Tools for MCP",
+  "description": "Patchright (undetected Playwright) Tools for MCP",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/microsoft/playwright-mcp.git"
+    "url": "git+https://github.com/Jkker/patchright-mcp.git"
   },
-  "homepage": "https://playwright.dev",
+  "homepage": "https://github.com/Jkker/patchright-mcp",
   "engines": {
     "node": ">=18"
   },
   "author": {
-    "name": "Microsoft Corporation"
+    "name": "Jkker"
   },
   "license": "Apache-2.0",
   "scripts": {
     "lint": "npm run update-readme",
     "update-readme": "node update-readme.js",
-    "docker-build": "docker build --no-cache -t playwright-mcp-dev:latest .",
-    "docker-rm": "docker rm playwright-mcp-dev",
-    "docker-run": "docker run -it -p 8080:8080 --name playwright-mcp-dev playwright-mcp-dev:latest",
+    "docker-build": "docker build --no-cache -t patchright-mcp:latest .",
+    "docker-rm": "docker rm patchright-mcp",
+    "docker-run": "docker run -it -p 8080:8080 --name patchright-mcp patchright-mcp:latest",
     "test": "playwright test",
     "ctest": "playwright test --project=chrome",
     "ftest": "playwright test --project=firefox",
     "wtest": "playwright test --project=webkit",
     "dtest": "MCP_IN_DOCKER=1 playwright test --project=chromium-docker",
     "npm-publish": "npm run clean && npm run test && npm publish",
-    "copy-config": "cp ../playwright/packages/playwright/src/mcp/config.d.ts . && perl -pi -e \"s|import type \\* as playwright from 'playwright-core';|import type * as playwright from 'playwright';|\" ./config.d.ts",
+    "copy-config": "cp ../patchright/packages/patchright/src/mcp/config.d.ts . && perl -pi -e \"s|import type \\* as patchright from 'patchright-core';|import type * as patchright from 'patchright';|\" ./config.d.ts",
     "roll": "npm run copy-config && npm run lint"
   },
   "exports": {
@@ -37,15 +37,15 @@
     }
   },
   "dependencies": {
-    "playwright": "1.58.0-alpha-2026-01-07",
-    "playwright-core": "1.58.0-alpha-2026-01-07"
+    "patchright": "1.57.0",
+    "patchright-core": "1.57.0"
   },
   "bin": {
-    "mcp-server-playwright": "cli.js"
+    "mcp-server-patchright": "cli.js"
   },
   "devDependencies": {
     "@modelcontextprotocol/sdk": "^1.24.0",
-    "@playwright/test": "1.58.0-alpha-2026-01-07",
+    "@playwright/test": "1.57.0",
     "@types/node": "^24.3.0"
   }
 }

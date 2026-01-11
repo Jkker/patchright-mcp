@@ -187,7 +187,7 @@ test(`extension not installed timeout`, async ({ browserWithExtension, startClie
     name: 'browser_navigate',
     arguments: { url: server.HELLO_WORLD },
   })).toHaveResponse({
-    result: expect.stringContaining('Extension connection timeout. Make sure the "Playwright MCP Bridge" extension is installed.'),
+    result: expect.stringContaining('Extension connection timeout. Make sure the "Patchright MCP Bridge" extension is installed.'),
     isError: true,
   });
 
@@ -239,7 +239,7 @@ test(`extension needs update`, async ({ browserWithExtension, startClient, serve
   });
 
   const confirmationPage = await confirmationPagePromise;
-  await expect(confirmationPage.locator('.status-banner')).toContainText(`Playwright MCP version trying to connect requires newer extension version`);
+  await expect(confirmationPage.locator('.status-banner')).toContainText(`Patchright MCP version trying to connect requires newer extension version`);
 
   expect(await navigateResponse).toHaveResponse({
     result: expect.stringContaining('Extension connection timeout.'),

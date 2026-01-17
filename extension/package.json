@@ -1,18 +1,18 @@
 {
-  "name": "@playwright/mcp-extension",
+  "name": "patchright-mcp-extension",
   "version": "0.0.56",
-  "description": "Playwright MCP Browser Extension",
+  "description": "Patchright MCP Browser Extension",
   "private": true,
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/microsoft/playwright-mcp.git"
+    "url": "git+https://github.com/Jkker/patchright-mcp.git"
   },
-  "homepage": "https://playwright.dev",
+  "homepage": "https://github.com/Jkker/patchright-mcp",
   "engines": {
     "node": ">=18"
   },
   "author": {
-    "name": "Microsoft Corporation"
+    "name": "Jkker"
   },
   "license": "Apache-2.0",
   "scripts": {

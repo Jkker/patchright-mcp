@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import type * as playwright from 'playwright';
+import type * as patchright from 'patchright';
 
 export type ToolCapability = 'core' | 'core-tabs' | 'core-install' | 'vision' | 'pdf' | 'testing' | 'tracing';
 
@@ -25,6 +25,7 @@ export type Config = {
   browser?: {
     /**
      * The type of browser to use.
+     * Note: Patchright only supports Chromium-based browsers for stealth mode.
      */
     browserName?: 'chromium' | 'firefox' | 'webkit';
 
@@ -45,14 +46,14 @@ export type Config = {
      *
      * This is useful for settings options like `channel`, `headless`, `executablePath`, etc.
      */
-    launchOptions?: playwright.LaunchOptions;
+    launchOptions?: patchright.LaunchOptions;
 
     /**
      * Context options for the browser context.
      *
      * This is useful for settings options like `viewport`.
      */
-    contextOptions?: playwright.BrowserContextOptions;
+    contextOptions?: patchright.BrowserContextOptions;
 
     /**
      * Chrome DevTools Protocol endpoint to connect to an existing browser instance in case of Chromium family browsers.

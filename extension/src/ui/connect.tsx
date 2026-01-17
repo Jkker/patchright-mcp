@@ -67,7 +67,7 @@ const ConnectApp: React.FC = () => {
         setClientInfo(info);
         setStatus({
           type: 'connecting',
-          message: `🎭 Playwright MCP started from  "${info}" is trying to connect. Do you want to continue?`
+          message: `🎭 Patchright MCP started from  "${info}" is trying to connect. Do you want to continue?`
         });
       } catch (e) {
         setStatus({ type: 'error', message: 'Failed to parse client version.' });
@@ -230,11 +230,11 @@ const ConnectApp: React.FC = () => {
 };
 
 const VersionMismatchError: React.FC<{ extensionVersion: string }> = ({ extensionVersion }) => {
-  const readmeUrl = 'https://github.com/microsoft/playwright-mcp/blob/main/extension/README.md';
-  const latestReleaseUrl = 'https://github.com/microsoft/playwright-mcp/releases/latest';
+  const readmeUrl = 'https://github.com/Jkker/patchright-mcp/blob/main/extension/README.md';
+  const latestReleaseUrl = 'https://github.com/Jkker/patchright-mcp/releases/latest';
   return (
     <div>
-      Playwright MCP version trying to connect requires newer extension version (current version: {extensionVersion}).{' '}
+      Patchright MCP version trying to connect requires newer extension version (current version: {extensionVersion}).{' '}
       <a href={latestReleaseUrl}>Click here</a> to download latest version of the extension, then drag and drop it into the Chrome Extensions page.{' '}
       See <a href={readmeUrl} target='_blank' rel='noopener noreferrer'>installation instructions</a> for more details.
     </div>

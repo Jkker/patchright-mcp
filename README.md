@@ -1,76 +1,57 @@
-## Playwright MCP
+## Patchright MCP
 
-A Model Context Protocol (MCP) server that provides browser automation capabilities using [Playwright](https://playwright.dev). This server enables LLMs to interact with web pages through structured accessibility snapshots, bypassing the need for screenshots or visually-tuned models.
+A Model Context Protocol (MCP) server that provides **undetected** browser automation capabilities using [Patchright](https://github.com/Kaliiiiiiiiii-Vinyzu/patchright) - a patched version of Playwright that bypasses bot detection. This server enables LLMs to interact with web pages through structured accessibility snapshots, bypassing the need for screenshots or visually-tuned models.
+
+> **Note**: This is a fork of the official [Playwright MCP](https://github.com/microsoft/playwright-mcp) that uses [Patchright](https://github.com/Kaliiiiiiiiii-Vinyzu/patchright-nodejs) instead of Playwright for stealth browser automation.
 
 ### Key Features
 
-- **Fast and lightweight**. Uses Playwright's accessibility tree, not pixel-based input.
+- **Undetected automation**. Bypasses bot detection systems like Cloudflare, DataDome, Kasada, and more.
+- **Fast and lightweight**. Uses Patchright's accessibility tree, not pixel-based input.
 - **LLM-friendly**. No vision models needed, operates purely on structured data.
 - **Deterministic tool application**. Avoids ambiguity common with screenshot-based approaches.
+- **Drop-in replacement**. Same API as Playwright MCP, just undetected.
+
+### Stealth Features
+
+Patchright applies stealth patches to bypass bot detection:
+- **WebDriver detection**: `navigator.webdriver` returns `false`
+- **Chrome automation flags**: Removes `--enable-automation` and other detectable flags
+- **Runtime.enable leak**: Avoids using Runtime.enable CDP command
+- **Passes detection on**: Cloudflare, Kasada, Akamai, DataDome, Fingerprint.com, and more
+
+> **Important**: Patchright only patches **Chromium-based browsers**. Firefox and WebKit are not supported for stealth mode.
 
 ### Requirements
 - Node.js 18 or newer
 - VS Code, Cursor, Windsurf, Claude Desktop, Goose or any other MCP client
 
-<!--
-// Generate using:
-node utils/generate-links.js
--->
-
 ### Getting started
 
-First, install the Playwright MCP server with your client.
+First, install the Patchright MCP server with your client.
 
 **Standard config** works in most of the tools:
 
 ```js
 {
   "mcpServers": {
-    "playwright": {
+    "patchright": {
       "command": "npx",
       "args": [
-        "@playwright/mcp@latest"
+        "patchright-mcp@latest"
       ]
     }
   }
 }
 ```
 
-[<img src="https://img.shields.io/badge/VS_Code-VS_Code?style=flat-square&label=Install%20Server&color=0098FF" alt="Install in VS Code">](https://insiders.vscode.dev/redirect?url=vscode%3Amcp%2Finstall%3F%257B%2522name%2522%253A%2522playwright%2522%252C%2522command%2522%253A%2522npx%2522%252C%2522args%2522%253A%255B%2522%2540playwright%252Fmcp%2540latest%2522%255D%257D) [<img alt="Install in VS Code Insiders" src="https://img.shields.io/badge/VS_Code_Insiders-VS_Code_Insiders?style=flat-square&label=Install%20Server&color=24bfa5">](https://insiders.vscode.dev/redirect?url=vscode-insiders%3Amcp%2Finstall%3F%257B%2522name%2522%253A%2522playwright%2522%252C%2522command%2522%253A%2522npx%2522%252C%2522args%2522%253A%255B%2522%2540playwright%252Fmcp%2540latest%2522%255D%257D)
-
-<details>
-<summary>Amp</summary>
-
-Add via the Amp VS Code extension settings screen or by updating your settings.json file:
-
-```json
-"amp.mcpServers": {
-  "playwright": {
-    "command": "npx",
-    "args": [
-      "@playwright/mcp@latest"
-    ]
-  }
-}
-```
-
-**Amp CLI Setup:**
-
-Add via the `amp mcp add`command below
-
-```bash
-amp mcp add playwright -- npx @playwright/mcp@latest
-```
-
-</details>
-
 <details>
 <summary>Claude Code</summary>
 
-Use the Claude Code CLI to add the Playwright MCP server:
+Use the Claude Code CLI to add the Patchright MCP server:
 
 ```bash
-claude mcp add playwright npx @playwright/mcp@latest
+claude mcp add patchright npx patchright-mcp@latest
 ```
 </details>
 
@@ -82,233 +63,23 @@ Follow the MCP install [guide](https://modelcontextprotocol.io/quickstart/user),
 </details>
 
 <details>
-<summary>Cline</summary>
-
-Follow the instruction in the section [Configuring MCP Servers](https://docs.cline.bot/mcp/configuring-mcp-servers)
-
-**Example: Local Setup**
-
-Add the following to your [`cline_mcp_settings.json`](https://docs.cline.bot/mcp/configuring-mcp-servers#editing-mcp-settings-files) file:
-
-```json
-{
-  "mcpServers": {
-    "playwright": {
-      "type": "stdio",
-      "command": "npx",
-      "timeout": 30,
-      "args": [
-        "-y",
-        "@playwright/mcp@latest"
-      ],
-      "disabled": false
-    }
-  }
-}
-```
-
-</details>
-
-<details>
-<summary>Codex</summary>
-
-Use the Codex CLI to add the Playwright MCP server:
-
-```bash
-codex mcp add playwright npx "@playwright/mcp@latest"
-```
-
-Alternatively, create or edit the configuration file `~/.codex/config.toml` and add:
-
-```toml
-[mcp_servers.playwright]
-command = "npx"
-args = ["@playwright/mcp@latest"]
-```
-
-For more information, see the [Codex MCP documentation](https://github.com/openai/codex/blob/main/codex-rs/config.md#mcp_servers).
-
-</details>
-
-<details>
-<summary>Copilot</summary>
-
-Use the Copilot CLI to interactively add the Playwright MCP server:
-
-```bash
-/mcp add
-```
-
-Alternatively, create or edit the configuration file `~/.copilot/mcp-config.json` and add:
-
-```json
-{
-  "mcpServers": {
-    "playwright": {
-      "type": "local",
-      "command": "npx",
-      "tools": [
-        "*"
-      ],
-      "args": [
-        "@playwright/mcp@latest"
-      ]
-    }
-  }
-}
-```
-
-For more information, see the [Copilot CLI documentation](https://docs.github.com/en/copilot/concepts/agents/about-copilot-cli).
-
-</details>
-
-<details>
 <summary>Cursor</summary>
 
-#### Click the button to install:
+Go to `Cursor Settings` -> `MCP` -> `Add new MCP Server`. Name to your liking, use `command` type with the command `npx patchright-mcp@latest`. You can also verify config or add command like arguments via clicking `Edit`.
 
-[<img src="https://cursor.com/deeplink/mcp-install-dark.svg" alt="Install in Cursor">](https://cursor.com/en/install-mcp?name=Playwright&config=eyJjb21tYW5kIjoibnB4IEBwbGF5d3JpZ2h0L21jcEBsYXRlc3QifQ%3D%3D)
-
-#### Or install manually:
-
-Go to `Cursor Settings` -> `MCP` -> `Add new MCP Server`. Name to your liking, use `command` type with the command `npx @playwright/mcp@latest`. You can also verify config or add command like arguments via clicking `Edit`.
-
-</details>
-
-<details>
-<summary>Factory</summary>
-
-Use the Factory CLI to add the Playwright MCP server:
-
-```bash
-droid mcp add playwright "npx @playwright/mcp@latest"
-```
-
-Alternatively, type `/mcp` within Factory droid to open an interactive UI for managing MCP servers.
-
-For more information, see the [Factory MCP documentation](https://docs.factory.ai/cli/configuration/mcp).
-
-</details>
-
-<details>
-<summary>Gemini CLI</summary>
-
-Follow the MCP install [guide](https://github.com/google-gemini/gemini-cli/blob/main/docs/tools/mcp-server.md#configure-the-mcp-server-in-settingsjson), use the standard config above.
-
-</details>
-
-<details>
-<summary>Goose</summary>
-
-#### Click the button to install:
-
-[![Install in Goose](https://block.github.io/goose/img/extension-install-dark.svg)](https://block.github.io/goose/extension?cmd=npx&arg=%40playwright%2Fmcp%40latest&id=playwright&name=Playwright&description=Interact%20with%20web%20pages%20through%20structured%20accessibility%20snapshots%20using%20Playwright)
-
-#### Or install manually:
-
-Go to `Advanced settings` -> `Extensions` -> `Add custom extension`. Name to your liking, use type `STDIO`, and set the `command` to `npx @playwright/mcp`. Click "Add Extension".
-</details>
-
-<details>
-<summary>Kiro</summary>
-
-Follow the MCP Servers [documentation](https://kiro.dev/docs/mcp/). For example in `.kiro/settings/mcp.json`:
-
-```json
-{
-  "mcpServers": {
-    "playwright": {
-      "command": "npx",
-      "args": [
-        "@playwright/mcp@latest"
-      ]
-    }
-  }
-}
-```
-</details>
-
-<details>
-<summary>LM Studio</summary>
-
-#### Click the button to install:
-
-[![Add MCP Server playwright to LM Studio](https://files.lmstudio.ai/deeplink/mcp-install-light.svg)](https://lmstudio.ai/install-mcp?name=playwright&config=eyJjb21tYW5kIjoibnB4IiwiYXJncyI6WyJAcGxheXdyaWdodC9tY3BAbGF0ZXN0Il19)
-
-#### Or install manually:
-
-Go to `Program` in the right sidebar -> `Install` -> `Edit mcp.json`. Use the standard config above.
-</details>
-
-<details>
-<summary>opencode</summary>
-
-Follow the MCP Servers [documentation](https://opencode.ai/docs/mcp-servers/). For example in `~/.config/opencode/opencode.json`:
-
-```json
-{
-  "$schema": "https://opencode.ai/config.json",
-  "mcp": {
-    "playwright": {
-      "type": "local",
-      "command": [
-        "npx",
-        "@playwright/mcp@latest"
-      ],
-      "enabled": true
-    }
-  }
-}
-
-```
-</details>
-
-<details>
-<summary>Qodo Gen</summary>
-
-Open [Qodo Gen](https://docs.qodo.ai/qodo-documentation/qodo-gen) chat panel in VSCode or IntelliJ → Connect more tools → + Add new MCP → Paste the standard config above.
-
-Click <code>Save</code>.
 </details>
 
 <details>
 <summary>VS Code</summary>
 
-#### Click the button to install:
-
-[<img src="https://img.shields.io/badge/VS_Code-VS_Code?style=flat-square&label=Install%20Server&color=0098FF" alt="Install in VS Code">](https://insiders.vscode.dev/redirect?url=vscode%3Amcp%2Finstall%3F%257B%2522name%2522%253A%2522playwright%2522%252C%2522command%2522%253A%2522npx%2522%252C%2522args%2522%253A%255B%2522%2540playwright%252Fmcp%2540latest%2522%255D%257D) [<img alt="Install in VS Code Insiders" src="https://img.shields.io/badge/VS_Code_Insiders-VS_Code_Insiders?style=flat-square&label=Install%20Server&color=24bfa5">](https://insiders.vscode.dev/redirect?url=vscode-insiders%3Amcp%2Finstall%3F%257B%2522name%2522%253A%2522playwright%2522%252C%2522command%2522%253A%2522npx%2522%252C%2522args%2522%253A%255B%2522%2540playwright%252Fmcp%2540latest%2522%255D%257D)
-
-#### Or install manually:
-
-Follow the MCP install [guide](https://code.visualstudio.com/docs/copilot/chat/mcp-servers#_add-an-mcp-server), use the standard config above. You can also install the Playwright MCP server using the VS Code CLI:
+Follow the MCP install [guide](https://code.visualstudio.com/docs/copilot/chat/mcp-servers#_add-an-mcp-server), use the standard config above. You can also install the Patchright MCP server using the VS Code CLI:
 
 ```bash
 # For VS Code
-code --add-mcp '{"name":"playwright","command":"npx","args":["@playwright/mcp@latest"]}'
+code --add-mcp '{"name":"patchright","command":"npx","args":["patchright-mcp@latest"]}'
 ```
 
-After installation, the Playwright MCP server will be available for use with your GitHub Copilot agent in VS Code.
-</details>
-
-<details>
-<summary>Warp</summary>
-
-Go to `Settings` -> `AI` -> `Manage MCP Servers` -> `+ Add` to [add an MCP Server](https://docs.warp.dev/knowledge-and-collaboration/mcp#adding-an-mcp-server). Use the standard config above.
-
-Alternatively, use the slash command `/add-mcp` in the Warp prompt and paste the standard config from above:
-```js
-{
-  "mcpServers": {
-    "playwright": {
-      "command": "npx",
-      "args": [
-        "@playwright/mcp@latest"
-      ]
-    }
-  }
-}
-```
-
+After installation, the Patchright MCP server will be available for use with your GitHub Copilot agent in VS Code.
 </details>
 
 <details>
@@ -320,39 +91,18 @@ Follow Windsurf MCP [documentation](https://docs.windsurf.com/windsurf/cascade/m
 
 ### Configuration
 
-Playwright MCP server supports following arguments. They can be provided in the JSON configuration above, as a part of the `"args"` list:
+Patchright MCP server supports the following arguments. They can be provided in the JSON configuration above, as a part of the `"args"` list:
+
+> **Note**: For best stealth results, use `--browser=chrome` (not chromium) and avoid `--headless` mode.
 
 <!--- Options generated by update-readme.js -->
 
 ```
-> npx @playwright/mcp@latest --help
+> npx patchright-mcp@latest --help
   --allowed-hosts <hosts...>            comma-separated list of hosts this
                                         server is allowed to serve from.
                                         Defaults to the host the server is bound
                                         to. Pass '*' to disable the host check.
-  --allowed-origins <origins>           semicolon-separated list of TRUSTED
-                                        origins to allow the browser to request.
-                                        Default is to allow all.
-                                        Important: *does not* serve as a
-                                        security boundary and *does not* affect
-                                        redirects.
-  --allow-unrestricted-file-access      allow access to files outside of the
-                                        workspace roots. Also allows
-                                        unrestricted access to file:// URLs. By
-                                        default access to file system is
-                                        restricted to workspace root directories
-                                        (or cwd if no roots are configured)
-                                        only, and navigation to file:// URLs is
-                                        blocked.
-  --blocked-origins <origins>           semicolon-separated list of origins to
-                                        block the browser from requesting.
-                                        Blocklist is evaluated before allowlist.
-                                        If used without the allowlist, requests
-                                        not matching the blocklist are still
-                                        allowed.
-                                        Important: *does not* serve as a
-                                        security boundary and *does not* affect
-                                        redirects.
   --block-service-workers               block service workers
   --browser <browser>                   browser or chrome channel to use,
                                         possible values: chrome, firefox,
@@ -364,10 +114,6 @@ Playwright MCP server supports following arguments. They can be provided in the 
   --cdp-header <headers...>             CDP headers to send with the connect
                                         request, multiple can be specified.
   --config <path>                       path to the configuration file.
-  --console-level <level>               level of console messages to return:
-                                        "error", "warning", "info", "debug".
-                                        Each level includes the messages of more
-                                        severe levels.
   --device <device>                     device to emulate, for example: "iPhone
                                         15"
   --executable-path <path>              path to the browser executable.
@@ -418,10 +164,6 @@ Playwright MCP server supports following arguments. They can be provided in the 
                                         dotenv format
   --shared-browser-context              reuse the same browser context between
                                         all connected HTTP clients.
-  --snapshot-mode <mode>                when taking snapshots for responses,
-                                        specifies the mode to use. Can be
-                                        "incremental", "full", or "none".
-                                        Default is incremental.
   --storage-state <path>                path to the storage state file for
                                         isolated sessions.
   --test-id-attribute <attribute>       specify the attribute to use for test
@@ -442,7 +184,7 @@ Playwright MCP server supports following arguments. They can be provided in the 
 
 ### User profile
 
-You can run Playwright MCP with persistent profile like a regular browser (default), in isolated contexts for testing sessions, or connect to your existing browser using the browser extension.
+You can run Patchright MCP with persistent profile like a regular browser (default), in isolated contexts for testing sessions, or connect to your existing browser using the browser extension.
 
 **Persistent profile**
 
@@ -470,10 +212,10 @@ state [here](https://playwright.dev/docs/auth).
 ```js
 {
   "mcpServers": {
-    "playwright": {
+    "patchright": {
       "command": "npx",
       "args": [
-        "@playwright/mcp@latest",
+        "patchright-mcp@latest",
         "--isolated",
         "--storage-state={path/to/storage.json}"
       ]
@@ -484,7 +226,7 @@ state [here](https://playwright.dev/docs/auth).
 
 **Browser Extension**
 
-The Playwright MCP Chrome Extension allows you to connect to existing browser tabs and leverage your logged-in sessions and browser state. See [extension/README.md](extension/README.md) for installation and setup instructions.
+The Patchright MCP Chrome Extension allows you to connect to existing browser tabs and leverage your logged-in sessions and browser state. See [extension/README.md](extension/README.md) for installation and setup instructions.
 
 ### Initial state
 
@@ -496,7 +238,7 @@ For the storage state, you can either:
 
 For the page state, you can use:
 
-- `--init-page` to point to a TypeScript file that will be evaluated on the Playwright page object. This allows you to run arbitrary code to set up the page.
+- `--init-page` to point to a TypeScript file that will be evaluated on the Patchright page object. This allows you to run arbitrary code to set up the page.
 
 ```ts
 // init-page.ts
@@ -512,16 +254,16 @@ This is useful for overriding browser APIs or setting up the environment.
 
 ```js
 // init-script.js
-window.isPlaywrightMCP = true;
+window.isPatchrightMCP = true;
 ```
 
 ### Configuration file
 
-The Playwright MCP server can be configured using a JSON configuration file. You can specify the configuration file
+The Patchright MCP server can be configured using a JSON configuration file. You can specify the configuration file
 using the `--config` command line option:
 
 ```bash
-npx @playwright/mcp@latest --config path/to/config.json
+npx patchright-mcp@latest --config path/to/config.json
 ```
 
 <details>
@@ -537,6 +279,7 @@ npx @playwright/mcp@latest --config path/to/config.json
   browser?: {
     /**
      * The type of browser to use.
+     * Note: Patchright only supports Chromium-based browsers for stealth mode.
      */
     browserName?: 'chromium' | 'firefox' | 'webkit';
 
@@ -557,14 +300,14 @@ npx @playwright/mcp@latest --config path/to/config.json
      *
      * This is useful for settings options like `channel`, `headless`, `executablePath`, etc.
      */
-    launchOptions?: playwright.LaunchOptions;
+    launchOptions?: patchright.LaunchOptions;
 
     /**
      * Context options for the browser context.
      *
      * This is useful for settings options like `viewport`.
      */
-    contextOptions?: playwright.BrowserContextOptions;
+    contextOptions?: patchright.BrowserContextOptions;
 
     /**
      * Chrome DevTools Protocol endpoint to connect to an existing browser instance in case of Chromium family browsers.
@@ -725,7 +468,7 @@ When running headed browser on system w/o display or from worker processes of th
 run the MCP server from environment with the DISPLAY and pass the `--port` flag to enable HTTP transport.
 
 ```bash
-npx @playwright/mcp@latest --port 8931
+npx patchright-mcp@latest --port 8931
 ```
 
 And then in MCP client config, set the `url` to the HTTP endpoint:
@@ -733,7 +476,7 @@ And then in MCP client config, set the `url` to the HTTP endpoint:
 ```js
 {
   "mcpServers": {
-    "playwright": {
+    "patchright": {
       "url": "http://localhost:8931/mcp"
     }
   }
@@ -748,9 +491,9 @@ And then in MCP client config, set the `url` to the HTTP endpoint:
 ```js
 {
   "mcpServers": {
-    "playwright": {
+    "patchright": {
       "command": "docker",
-      "args": ["run", "-i", "--rm", "--init", "--pull=always", "mcr.microsoft.com/playwright/mcp"]
+      "args": ["run", "-i", "--rm", "--init", "patchright-mcp"]
     }
   }
 }
@@ -759,11 +502,11 @@ And then in MCP client config, set the `url` to the HTTP endpoint:
 Or If you prefer to run the container as a long-lived service instead of letting the MCP client spawn it, use:
 
 ```
-docker run -d -i --rm --init --pull=always \
+docker run -d -i --rm --init \
   --entrypoint node \
-  --name playwright \
+  --name patchright \
   -p 8931:8931 \
-  mcr.microsoft.com/playwright/mcp \
+  patchright-mcp \
   cli.js --headless --browser chromium --no-sandbox --port 8931
 ```
 
@@ -772,7 +515,7 @@ The server will listen on host port **8931** and can be reached by any MCP clien
 You can build the Docker image yourself.
 
 ```
-docker build -t mcr.microsoft.com/playwright/mcp .
+docker build -t patchright-mcp .
 ```
 </details>
 
@@ -782,13 +525,13 @@ docker build -t mcr.microsoft.com/playwright/mcp .
 ```js
 import http from 'http';
 
-import { createConnection } from '@playwright/mcp';
+import { createConnection } from 'patchright-mcp';
 import { SSEServerTransport } from '@modelcontextprotocol/sdk/server/sse.js';
 
 http.createServer(async (req, res) => {
   // ...
 
-  // Creates a headless Playwright MCP server with SSE transport
+  // Creates a headless Patchright MCP server with SSE transport
   const connection = await createConnection({ browser: { launchOptions: { headless: true } } });
   const transport = new SSEServerTransport('/messages', res);
   await connection.connect(transport);
@@ -832,7 +575,7 @@ http.createServer(async (req, res) => {
   - Title: Get console messages
   - Description: Returns all console messages
   - Parameters:
-    - `level` (string, optional): Level of the console messages to return. Each level includes the messages of more severe levels. Defaults to "info".
+    - `onlyErrors` (boolean, optional): Only return error messages
   - Read-only: **true**
 
 <!-- NOTE: This has been generated via update-readme.js -->
@@ -918,8 +661,7 @@ http.createServer(async (req, res) => {
 - **browser_network_requests**
   - Title: List network requests
   - Description: Returns all network requests since loading the page
-  - Parameters:
-    - `includeStatic` (boolean, optional): Whether to include successful static resources like images, fonts, scripts, etc. Defaults to false.
+  - Parameters: None
   - Read-only: **true**
 
 <!-- NOTE: This has been generated via update-readme.js -->
@@ -947,7 +689,7 @@ http.createServer(async (req, res) => {
   - Title: Run Playwright code
   - Description: Run Playwright code snippet
   - Parameters:
-    - `code` (string): A JavaScript function containing Playwright code to execute. It will be invoked with a single argument, page, which you can use for any page interaction. For example: `async (page) => { await page.getByRole('button', { name: 'Submit' }).click(); return await page.title(); }`
+    - `code` (string): Playwright code snippet to run. The snippet should access the `page` object to interact with the page. Can make multiple statements. For example: `await page.getByRole('button', { name: 'Submit' }).click();`
   - Read-only: **false**
 
 <!-- NOTE: This has been generated via update-readme.js -->
@@ -966,8 +708,7 @@ http.createServer(async (req, res) => {
 - **browser_snapshot**
   - Title: Page snapshot
   - Description: Capture accessibility snapshot of the current page, this is better than screenshot
-  - Parameters:
-    - `filename` (string, optional): Save snapshot to markdown file instead of returning it in the response.
+  - Parameters: None
   - Read-only: **true**
 
 <!-- NOTE: This has been generated via update-readme.js -->
